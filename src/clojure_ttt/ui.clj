@@ -1,11 +1,16 @@
 (ns clojure-ttt.ui
   (:require [clojure-ttt.board :refer :all]))
 
-(defn- cell-string [index, cell] 
+(defn- inner-string [index, value]
   (cond
-    (= index 8) (str (+ 1 index))
-    (= 2 (mod index 3)) (str (+ 1 index) "\n-----\n")
-    :else (str (+ 1 index) "|")))
+    (not= " " value) value
+    :else (str (+ 1 index))))
+
+(defn- cell-string [index, value] 
+  (cond
+    (= index 8) (inner-string index value)
+    (= 2 (mod index 3)) (str (inner-string index value) "\n-----\n")
+    :else (str (inner-string index value) "|")))
 
 (defn- cell-strings [board]
   (map-indexed #(cell-string %1, %2) board))

@@ -17,3 +17,10 @@
        "X" " " " "
        " " " " " "]
       (play-on-board (make-board) 4 "X"))))
+
+(describe "available-moves"
+          (it "gets available moves"
+              (should=
+                [2, 3, 8, 9]
+                (available-moves
+                  ["X", " ", " ", "O", "O", "X", "X", " ", " "]))))

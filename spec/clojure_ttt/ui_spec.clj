@@ -5,5 +5,5 @@
 
 (describe "output-board"
   (it "prints board out"
-    (should= "1 2 3\n4 5 6\n7 8 9"
+    (should= "1|2|3\n-----\n4|5|6\n-----\n7|8|9\n"
       (with-out-str (output-board (make-board))))))

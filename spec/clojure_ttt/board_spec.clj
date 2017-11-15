@@ -26,18 +26,38 @@
                 [2, 3, 8, 9]
                 (available-moves (vec-for-string "X  OOXX  ")))))
 
-(describe "winner"
-          (it "is true for X"
-              (should= true (winner (vec-for-string "XXXOO    ") "X")))
+(describe "winner?"
+          (it "true for X win in row"
+              (should= true (winner? (vec-for-string "XXXOO    ") "X")))
 
-          (it "is false for X"
-              (should= false (winner (vec-for-string "XX OOOX  ") "X")))
+          (it "false for X win"
+              (should= false (winner? (vec-for-string "XX OOOX  ") "X")))
           
-          (it "is true for O"
-              (should= true (winner (vec-for-string "XOX O XO ") "O")))
+          (it "true for O win in column"
+              (should= true (winner? (vec-for-string "XOX O XO ") "O")))
           
-          (it "is true for X"
-              (should= true (winner (vec-for-string "XO  XO  X") "X")))
+          (it "true for X win on diagonal"
+              (should= true (winner? (vec-for-string "XO  XO  X") "X")))
           
           )
+
+(describe "winner"
+          (it "O when O is winner"
+              (should= "O" (winner (vec-for-string "XX OOOX  "))))
+
+          (it "X when X is winner"
+              (should= "X" (winner (vec-for-string "XXXOO    ")))))
+
+(describe "tie?"
+          (it "false when full board with winner"
+              (should= false (tie? (vec-for-string "XOOOOXXXX"))))
+
+          (it "true when full board no winner"
+              (should= true (tie? (vec-for-string "XOXOOXXXO"))))
+
+          (it "false when not full with winner"
+              (should= false (tie? (vec-for-string "  X XOXO "))))
+
+          (it "false when not full no winner"
+              (should= false (tie? (vec-for-string "    XOXO ")))))
 

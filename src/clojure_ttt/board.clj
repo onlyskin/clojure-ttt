@@ -6,17 +6,33 @@
   [board, position, marker]
   (assoc board (- position 1) marker))
 
-(declare empty-cell)
+(declare empty-cell?)
 (defn available-moves [board]
-  (map #(+ 1 (get % 0)) (filter #(empty-cell %) (map-indexed #(vec [%1, %2]) board))))
+  (map
+    #(+ 1 (get % 0))
+    (filter
+      #(empty-cell? %)
+      (map-indexed #(vec [%1, %2]) board))))
 
 (declare win-paths)
-(declare win-in-path)
-(defn winner [board marker]
-  (boolean (some #(win-in-path board marker %) (win-paths)))
-  )
+(declare win-in-path?)
+(defn winner? [board marker]
+   (boolean
+     (some #(win-in-path? board marker %) (win-paths))))
 
-(defn- empty-cell [cell]
+(defn winner [board]
+  (cond
+    (= true (winner? board "X")) "X"
+    (= true (winner? board "O")) "O"))
+
+(declare full?)
+(defn tie? [board]
+  (and
+    (full? board)
+    (not (winner? board "X"))
+    (not (winner? board "O"))))
+
+(defn- empty-cell? [cell]
   (= " " (get cell 1)))
 
 (defn- rows []
@@ -31,6 +47,8 @@
 
 (defn- win-paths [] (concat (rows) (columns) (diagonals)))
 
-(defn- win-in-path [board marker path]
+(defn- win-in-path? [board marker path]
   (every? #(= % marker) (map #(get board %) path)))
 
+(defn- full? [board] (not-any?
+                       #(= " " %) board))

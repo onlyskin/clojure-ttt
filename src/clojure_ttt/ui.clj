@@ -1,6 +1,16 @@
 (ns clojure-ttt.ui
   (:require [clojure-ttt.board :refer :all]))
 
+(defn output [message] (println message))
+
+(defn input [prompt]
+  (println prompt)
+  (read-line))
+
+(declare board-str)
+(defn output-board [board]
+  (output (board-str board)))
+
 (defn- inner-string [index, value]
   (cond
     (not= " " value) value
@@ -18,7 +28,3 @@
 (defn- board-str [board]
   (clojure.string/join
     (cell-strings board)))
-
-(defn output-board [board]
-  (println
-    (board-str board)))

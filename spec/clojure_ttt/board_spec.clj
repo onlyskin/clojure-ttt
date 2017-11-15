@@ -18,7 +18,14 @@
                 [" " " " " "
                  "X" " " " "
                  " " " " " "]
-                (play-on-board (make-board) 4 "X"))))
+                (play-on-board (make-board) 4)))
+          
+          (it "plays on board"
+              (should=
+                [" " " " " "
+                 "X" " " "O"
+                 " " " " " "]
+                (play-on-board (vec-for-string "   X     ") 6))))
 
 (describe "available-moves"
           (it "gets available moves"

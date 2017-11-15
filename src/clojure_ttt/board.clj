@@ -2,9 +2,10 @@
 
 (defn make-board [] (vec (repeat 9 " ")))
 
+(declare current-marker)
 (defn play-on-board
-  [board, position, marker]
-  (assoc board (- position 1) marker))
+  [board, position]
+  (assoc board (- position 1) (current-marker board)))
 
 (declare empty-cell?)
 (defn available-moves [board]
@@ -58,3 +59,8 @@
 (defn- full? [board] (not-any?
                        #(= " " %) board))
 
+(defn- current-marker [board]
+  (get
+    ["O" "X"]
+    (mod (count (available-moves board)) 2))
+  )

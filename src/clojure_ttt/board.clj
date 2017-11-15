@@ -19,14 +19,18 @@
 (defn- empty-cell [cell]
   (= " " (get cell 1)))
 
-(defn- win-paths [] [[0 1 2]
-                     [3 4 5]
-                     [6 7 8]
-                     [0 3 6]
-                     [1 4 7]
-                     [2 5 8]
-                     [0 4 8]
-                     [6 4 2]])
+(defn- rows []
+  (vec
+    (map
+      #(vec [(+ 0 (* 3 %)) (+ 1 (* 3 %)) (+ 2 (* 3 %))])
+      (range 3))))
+
+(defn- columns [] (apply mapv vector (rows)))
+
+(defn- diagonals [] [[0 4 8] [6 4 2]])
+
+(defn- win-paths [] (concat (rows) (columns) (diagonals)))
 
 (defn- win-in-path [board marker path]
   (every? #(= % marker) (map #(get board %) path)))
+

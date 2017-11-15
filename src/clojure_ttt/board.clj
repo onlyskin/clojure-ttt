@@ -32,6 +32,11 @@
     (not (winner? board "X"))
     (not (winner? board "O"))))
 
+(defn game-over? [board] (or
+                           (winner? board "X")
+                           (winner? board "O")
+                           (tie? board)))
+
 (defn- empty-cell? [cell]
   (= " " (get cell 1)))
 
@@ -52,3 +57,4 @@
 
 (defn- full? [board] (not-any?
                        #(= " " %) board))
+

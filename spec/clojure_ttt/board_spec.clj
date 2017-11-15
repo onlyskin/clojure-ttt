@@ -2,6 +2,8 @@
   (:require [speclj.core :refer :all]
             [clojure-ttt.board :refer :all]))
 
+(defn- vec-for-string [board-string] (clojure.string/split board-string #""))
+
 (describe "make-board"
           (it "has 9 empty strings"
               (should= 
@@ -22,20 +24,20 @@
           (it "gets available moves"
               (should=
                 [2, 3, 8, 9]
-                (available-moves ["X", " ", " ", "O", "O", "X", "X", " ", " "]))))
+                (available-moves (vec-for-string "X  OOXX  ")))))
 
 (describe "winner"
           (it "is true for X"
-              (should= true (winner ["X" "X" "X" "O" "O" " " " " " " " "] "X")))
+              (should= true (winner (vec-for-string "XXXOO    ") "X")))
 
           (it "is false for X"
-              (should= false (winner ["X" "X" " " "O" "O" "O" "X" " " " "] "X")))
+              (should= false (winner (vec-for-string "XX OOOX  ") "X")))
           
           (it "is true for O"
-              (should= true (winner ["X" "O" "X" " " "O" " " "X" "O" " "] "O")))
+              (should= true (winner (vec-for-string "XOX O XO ") "O")))
           
           (it "is true for X"
-              (should= true (winner ["X" "O" " " " " "X" "O" " " " " "X"] "X")))
+              (should= true (winner (vec-for-string "XO  XO  X") "X")))
           
           )
 

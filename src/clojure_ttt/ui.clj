@@ -7,6 +7,13 @@
   (println prompt)
   (read-line))
 
+(defn input-integer []
+  (try
+    (Integer/parseInt (str (read-line)))
+    (catch Exception e (input-integer))
+    )
+  )
+
 (declare board-str)
 (defn output-board [board]
   (output (board-str board)))

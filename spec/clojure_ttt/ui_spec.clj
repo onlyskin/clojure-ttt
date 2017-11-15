@@ -32,3 +32,11 @@
                 "prompt-string\n"
                 (with-out-str (with-in-str "test input\n"
                                 (input "prompt-string"))))))
+
+(describe "input-integer"
+          (it "gets input integer"
+              (should= 3 (with-in-str "3\n" (input-integer))))
+
+          (it "rejects string"
+              (should= 3 (with-in-str "st\n3\n" (input-integer))))
+          )

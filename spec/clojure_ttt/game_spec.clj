@@ -24,7 +24,12 @@
 
           (it "ends" (should true))
 
-          (it "output print X won"
+          (it "output prints X won"
               (should-contain
                 "X won"
-                (out-str-from-run ["1" "4" "2" "5" "3"]))))
+                (out-str-from-run ["1" "4" "2" "5" "3"])))
+
+          (it "rejects bad moves"
+              (should-contain
+                "X won"
+                (out-str-from-run ["1" "4" "st" "2" "5" "20" "3"]))))

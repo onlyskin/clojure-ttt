@@ -7,7 +7,7 @@
   (cond
     (game-over? board) (output-game-result board)
     :else (do
-            (->> (input-integer)
+            (->> (input-move board)
                  (play-on-board board)
                  (play-turn)))))
 

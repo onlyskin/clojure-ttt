@@ -58,3 +58,11 @@
 
           (it "rejects string"
               (should= 3 (with-in-str "st\n3\n" (input-integer)))))
+
+(describe "input-move"
+          (it "rejects unavailable moves and strings"
+              (should= 8 (with-in-str
+                           "3\nst\n20\n8\n"
+                           (input-move
+                             (vec-for-string "XXOOOX   "))))))
+

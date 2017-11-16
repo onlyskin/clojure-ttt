@@ -8,9 +8,8 @@
 
 (defn- play-turn [board]
   (cond
-    (game-over? board) (output "over")
+    (game-over? board) (output-game-result board)
     :else (do
             (output-board board)
             (play-turn
-              (play-on-board board (input-integer)))))
-  )
+              (play-on-board board (input-integer))))))

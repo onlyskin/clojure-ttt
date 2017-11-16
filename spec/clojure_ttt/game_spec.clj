@@ -23,7 +23,7 @@
 
           (it "ends" (should true))
 
-          (xit "output print X won"
+          (it "output print X won"
               (should-contain
                 "X won"
                 (with-out-str

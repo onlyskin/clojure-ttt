@@ -3,10 +3,10 @@
   (:require [clojure-ttt.board :refer :all]))
 
 (defn- play-turn [board]
+  (output-board board)
   (cond
     (game-over? board) (output-game-result board)
     :else (do
-            (output-board board)
             (->> (input-integer)
                  (play-on-board board)
                  (play-turn)))))

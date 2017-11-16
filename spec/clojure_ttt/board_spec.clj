@@ -2,29 +2,19 @@
   (:require [speclj.core :refer :all]
             [clojure-ttt.board :refer :all]))
 
-(defn- vec-for-string [board-string] (clojure.string/split board-string #""))
+(defn- vec-for-string [board-string]
+  (clojure.string/split board-string #""))
 
 (describe "make-board"
-          (it "has 9 empty strings"
-              (should= 
-                [" " " " " "
-                 " " " " " "
-                 " " " " " "]
+          (it "returns nine string vector"
+              (should=
+                (vec-for-string "         ")
                 (make-board))))
 
 (describe "play-on-board"
           (it "plays on board"
               (should=
-                [" " " " " "
-                 "X" " " " "
-                 " " " " " "]
-                (play-on-board (make-board) 4)))
-          
-          (it "plays on board"
-              (should=
-                [" " " " " "
-                 "X" " " "O"
-                 " " " " " "]
+                (vec-for-string "   X O   ")
                 (play-on-board (vec-for-string "   X     ") 6))))
 
 (describe "available-moves"
@@ -35,48 +25,62 @@
 
 (describe "winner?"
           (it "true for X win in row"
-              (should= true (winner? (vec-for-string "XXXOO    ") "X")))
+              (should= true
+                       (winner? (vec-for-string "XXXOO    ") "X")))
 
           (it "false for X win"
-              (should= false (winner? (vec-for-string "XX OOOX  ") "X")))
+              (should= false
+                       (winner? (vec-for-string "XX OOOX  ") "X")))
           
           (it "true for O win in column"
-              (should= true (winner? (vec-for-string "XOX O XO ") "O")))
+              (should= true
+                       (winner? (vec-for-string "XOX O XO ") "O")))
           
           (it "true for X win on diagonal"
-              (should= true (winner? (vec-for-string "XO  XO  X") "X")))
+              (should= true
+                       (winner? (vec-for-string "XO  XO  X") "X")))
           
           )
 
 (describe "winner"
           (it "O when O is winner"
-              (should= "O" (winner (vec-for-string "XX OOOX  "))))
+              (should= "O"
+                       (winner (vec-for-string "XX OOOX  "))))
 
           (it "X when X is winner"
-              (should= "X" (winner (vec-for-string "XXXOO    ")))))
+              (should= "X"
+                       (winner (vec-for-string "XXXOO    ")))))
 
 (describe "tie?"
           (it "false when full board with winner"
-              (should= false (tie? (vec-for-string "XOOOOXXXX"))))
+              (should= false
+                       (tie? (vec-for-string "XOOOOXXXX"))))
 
           (it "true when full board no winner"
-              (should= true (tie? (vec-for-string "XOXOOXXXO"))))
+              (should= true
+                       (tie? (vec-for-string "XOXOOXXXO"))))
 
           (it "false when not full with winner"
-              (should= false (tie? (vec-for-string "  X XOXO "))))
+              (should= false
+                       (tie? (vec-for-string "  X XOXO "))))
 
           (it "false when not full no winner"
-              (should= false (tie? (vec-for-string "    XOXO ")))))
+              (should= false
+                       (tie? (vec-for-string "    XOXO ")))))
 
 (describe "game-over?"
           (it "true when full board with winner"
-              (should= true (game-over? (vec-for-string "XOOOOXXXX"))))
+              (should= true
+                       (game-over? (vec-for-string "XOOOOXXXX"))))
 
           (it "true when full board no winner"
-              (should= true (game-over? (vec-for-string "XOXOOXXXO"))))
+              (should= true
+                       (game-over? (vec-for-string "XOXOOXXXO"))))
 
           (it "true when not full with winner"
-              (should= true (game-over? (vec-for-string "  X XOXO "))))
+              (should= true
+                       (game-over? (vec-for-string "  X XOXO "))))
 
           (it "false when not full no winner"
-              (should= false (game-over? (vec-for-string "    XOXO ")))))
+              (should= false
+                       (game-over? (vec-for-string "    XOXO ")))))

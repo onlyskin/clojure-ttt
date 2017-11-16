@@ -30,11 +30,42 @@
     (winner? board "O") (output "O won.")
     (tie? board) (output "The game was a tie.")))
 
-(defn input [prompt]
-  (println prompt)
-  (read-line))
+(defn input
+  ([prompt]
+   (println prompt)
+   (read-line))
+  ([]
+   (read-line)))
+
+(defn- parseable-as-int? [string]
+  (try
+    (Integer/parseInt string)
+    true
+    (catch Exception e false)))
 
 (defn input-integer []
-  (try
-    (Integer/parseInt (str (read-line)))
-    (catch Exception e (input-integer))))
+  (let [s (input)]
+    (cond
+      (parseable-as-int? s) (Integer/parseInt s)
+      :else (recur))))
+
+(defn- move-available? [board, move]
+  (->> board
+       (available-moves)
+       (some (partial = move))
+       (boolean)))
+
+(defn input-move [board]
+  (let [s (input)]
+    (cond
+
+      (parseable-as-int? s)
+      (cond
+        (move-available? board (Integer/parseInt s))
+        (Integer/parseInt s)
+
+        :else
+        (recur board))
+
+      :else
+      (recur board))))

@@ -1,16 +1,9 @@
 (ns clojure-ttt.board)
 
-(declare current-marker)
-(declare empty-cell?)
-(declare win-paths)
-(declare win-in-path?)
-(declare full?)
-
 (defn make-board [] (vec (repeat 9 " ")))
 
-(defn play-on-board
-  [board, position]
-  (assoc board (- position 1) (current-marker board)))
+(defn- empty-cell? [cell]
+  (= " " (get cell 1)))
 
 (defn available-moves [board]
   (->> board
@@ -18,29 +11,20 @@
        (filter #(empty-cell? %))
        (map #(+ 1 (get % 0)))))
 
-(defn winner? [board marker]
-   (boolean
-     (some #(win-in-path? board marker %) (win-paths))))
+(defn- markers [] ["O" "X"])
 
-(defn winner [board]
-  (cond
-    (= true (winner? board "X")) "X"
-    (= true (winner? board "O")) "O"))
+(defn- current-marker [board]
+  (as-> board v
+    (available-moves v)
+    (count v)
+    (mod v 2)
+    (get (markers) v)))
 
-(defn tie? [board]
-  (and
-    (full? board)
-    (not (winner? board "X"))
-    (not (winner? board "O"))))
+(defn play-on-board [board, position]
+  (assoc board (- position 1) (current-marker board)))
 
-(defn game-over? [board]
-  (or
-    (winner? board "X")
-    (winner? board "O")
-    (tie? board)))
-
-(defn- empty-cell? [cell]
-  (= " " (get cell 1)))
+(defn- win-in-path? [board marker path]
+  (every? #(= % marker) (map #(get board %) path)))
 
 (defn- rows []
   (let [n 3]
@@ -54,15 +38,30 @@
 
 (defn- win-paths [] (concat (rows) (columns) (diagonals)))
 
-(defn- win-in-path? [board marker path]
-  (every? #(= % marker) (map #(get board %) path)))
+(defn winner? [board marker]
+   (boolean
+     (some #(win-in-path? board marker %) (win-paths))))
+
+(defn- marker-1 [] (get (markers) 1))
+
+(defn- marker-0 [] (get (markers) 0))
+
+(defn winner [board]
+  (cond
+    (= true (winner? board (marker-1))) (marker-1)
+    (= true (winner? board (marker-0))) (marker-0)))
 
 (defn- full? [board]
   (not-any? #(= " " %) board))
 
-(defn- current-marker [board]
-  (as-> board v
-    (available-moves v)
-    (count v)
-    (mod v 2)
-    (get ["O" "X"] v)))
+(defn tie? [board]
+  (and
+    (full? board)
+    (not (winner? board (marker-1)))
+    (not (winner? board (marker-0)))))
+
+(defn game-over? [board]
+  (or
+    (winner? board (marker-1))
+    (winner? board (marker-0))
+    (tie? board)))

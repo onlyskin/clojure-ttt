@@ -9,7 +9,7 @@
   (->> board
        (map-indexed #(vec [%1, %2]))
        (filter empty-cell?)
-       (map #(+ 1 (get % 0)))))
+       (map #(inc (get % 0)))))
 
 (defn- markers [] ["O" "X"])
 
@@ -49,9 +49,9 @@
 (defn- marker-0 [] (get (markers) 0))
 
 (defn winner [board]
-  (cond
-    (= true (winner? board (marker-1))) (marker-1)
-    (= true (winner? board (marker-0))) (marker-0)))
+  (condp = true
+    (winner? board (marker-1)) (marker-1)
+    (winner? board (marker-0)) (marker-0)))
 
 (defn- full? [board]
   (not-any? #(= " " %) board))

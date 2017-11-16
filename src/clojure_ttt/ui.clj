@@ -6,7 +6,7 @@
 (defn- inner-string [index, value]
   (cond
     (not= " " value) value
-    :else (str (+ 1 index))))
+    :else (str (inc index))))
 
 (defn- cell-string [index, value] 
   (cond

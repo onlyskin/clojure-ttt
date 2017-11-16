@@ -8,7 +8,7 @@
 (defn available-moves [board]
   (->> board
        (map-indexed #(vec [%1, %2]))
-       (filter #(empty-cell? %))
+       (filter empty-cell?)
        (map #(+ 1 (get % 0)))))
 
 (defn- markers [] ["O" "X"])

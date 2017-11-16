@@ -1,5 +1,5 @@
-(ns clojure-ttt.core)
+(ns clojure-ttt.core
+  (:require [clojure-ttt.game :refer :all]))
 
-(defn -main
-  [& args]
-  (println "Hello World"))
+(defn -main [& args]
+  (run-game))

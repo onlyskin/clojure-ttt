@@ -14,17 +14,19 @@
 (defn- markers [] ["O" "X"])
 
 (defn- current-marker [board]
-  (as-> board v
-    (available-moves v)
-    (count v)
-    (mod v 2)
-    (get (markers) v)))
+  (as-> board b
+    (available-moves b)
+    (count b)
+    (mod b 2)
+    (get (markers) b)))
 
 (defn play-on-board [board, position]
   (assoc board (- position 1) (current-marker board)))
 
 (defn- win-in-path? [board marker path]
-  (every? #(= % marker) (map #(get board %) path)))
+  (->> path
+    (map #(get board %))
+    (every? #(= % marker))))
 
 (defn- rows []
   (let [n 3]

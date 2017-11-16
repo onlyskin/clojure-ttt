@@ -18,6 +18,13 @@
 (defn output-board [board]
   (output (board-str board)))
 
+(defn output-game-result [board]
+  (cond
+    (winner? board "X") (output "X won.")
+    (winner? board "O") (output "O won.")
+    (tie? board) (output "The game was a tie."))
+  )
+
 (defn- inner-string [index, value]
   (cond
     (not= " " value) value

@@ -3,6 +3,8 @@
             [clojure-ttt.board :refer :all]
             [clojure-ttt.ui :refer :all]))
 
+(defn- vec-for-string [board-string] (clojure.string/split board-string #""))
+
 (describe "output"
           (it "prints message out"
               (should= "test message\n"
@@ -18,8 +20,24 @@
               (should=
                 "1|X|O\n-----\n4|5|6\n-----\n7|8|9\n"
                 (with-out-str
-                  (output-board
-                    [" " "X" "O" " " " " " " " " " " " "])))))
+                  (output-board (vec-for-string " XO      "))))))
+
+(describe "output-game-result"
+          (it "prints X won"
+              (should-contain "X won" (with-out-str
+                  (output-game-result
+                    (vec-for-string "XXXOO    ")))))
+
+          (it "prints O won"
+              (should-contain "O won" (with-out-str
+                  (output-game-result
+                    (vec-for-string "XX OOOX  ")))))
+
+          (it "prints tie"
+              (should-contain "tie" (with-out-str
+                  (output-game-result
+                    (vec-for-string "XOXOOXXXO")))))
+          )
 
 (describe "input"
           (it "gets input"

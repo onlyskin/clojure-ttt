@@ -3,6 +3,7 @@
   (:require [clojure-ttt.board :refer :all]))
 
 (declare play-turn)
+
 (defn run-game []
   (play-turn (make-board)))
 

@@ -1,9 +1,10 @@
 (ns clojure-ttt.ui
   (:require [clojure-ttt.board :refer :all]))
 
+(declare board-str)
+
 (defn output [message] (println message))
 
-(declare board-str)
 (defn output-board [board]
   (output (board-str board)))
 

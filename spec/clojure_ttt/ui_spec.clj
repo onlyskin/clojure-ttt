@@ -3,7 +3,8 @@
             [clojure-ttt.board :refer :all]
             [clojure-ttt.ui :refer :all]))
 
-(defn- vec-for-string [board-string] (clojure.string/split board-string #""))
+(defn- vec-for-string [board-string]
+  (clojure.string/split board-string #""))
 
 (describe "output"
           (it "prints message out"
@@ -12,11 +13,12 @@
                          (output "test message")))))
 
 (describe "output-board"
-          (it "prints board out"
+          (it "prints empty board"
               (should=
                 "1|2|3\n-----\n4|5|6\n-----\n7|8|9\n"
                 (with-out-str (output-board (make-board)))))
-          (it "prints board with markers on"
+
+          (it "prints board with markers"
               (should=
                 "1|X|O\n-----\n4|5|6\n-----\n7|8|9\n"
                 (with-out-str
@@ -36,8 +38,7 @@
           (it "prints tie"
               (should-contain "tie" (with-out-str
                   (output-game-result
-                    (vec-for-string "XOXOOXXXO")))))
-          )
+                    (vec-for-string "XOXOOXXXO"))))))
 
 (describe "input"
           (it "gets input"
@@ -52,9 +53,8 @@
                                 (input "prompt-string"))))))
 
 (describe "input-integer"
-          (it "gets input integer"
+          (it "gets integer"
               (should= 3 (with-in-str "3\n" (input-integer))))
 
           (it "rejects string"
-              (should= 3 (with-in-str "st\n3\n" (input-integer))))
-          )
+              (should= 3 (with-in-str "st\n3\n" (input-integer)))))

@@ -3,17 +3,6 @@
 
 (defn output [message] (println message))
 
-(defn input [prompt]
-  (println prompt)
-  (read-line))
-
-(defn input-integer []
-  (try
-    (Integer/parseInt (str (read-line)))
-    (catch Exception e (input-integer))
-    )
-  )
-
 (declare board-str)
 (defn output-board [board]
   (output (board-str board)))
@@ -22,8 +11,16 @@
   (cond
     (winner? board "X") (output "X won.")
     (winner? board "O") (output "O won.")
-    (tie? board) (output "The game was a tie."))
-  )
+    (tie? board) (output "The game was a tie.")))
+
+(defn input [prompt]
+  (println prompt)
+  (read-line))
+
+(defn input-integer []
+  (try
+    (Integer/parseInt (str (read-line)))
+    (catch Exception e (input-integer))))
 
 (defn- inner-string [index, value]
   (cond

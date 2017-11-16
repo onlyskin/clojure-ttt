@@ -9,11 +9,9 @@
 
 (declare empty-cell?)
 (defn available-moves [board]
-  (map
-    #(+ 1 (get % 0))
-    (filter
-      #(empty-cell? %)
-      (map-indexed #(vec [%1, %2]) board))))
+  (map #(+ 1 (get % 0))
+       (filter #(empty-cell? %)
+               (map-indexed #(vec [%1, %2]) board))))
 
 (declare win-paths)
 (declare win-in-path?)

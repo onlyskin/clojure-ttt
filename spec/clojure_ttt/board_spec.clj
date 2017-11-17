@@ -84,3 +84,14 @@
           (it "false when not full no winner"
               (should= false
                        (game-over? (vec-for-string "    XOXO ")))))
+
+(describe "current-marker"
+          (it "X on first turn"
+              (should=
+                "X"
+                (current-marker (vec-for-string "         "))))
+
+          (it "X on first turn"
+              (should=
+                "O"
+                (current-marker (vec-for-string "XX OO X  ")))))

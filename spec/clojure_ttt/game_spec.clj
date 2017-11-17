@@ -1,10 +1,11 @@
 (ns clojure-ttt.game-spec
   (:require [speclj.core :refer :all]
-            [clojure-ttt.game :refer :all])) 
+            [clojure-ttt.game :refer :all]
+            [clojure-ttt.human-player :refer :all])) 
 
 (defn out-str-from-run [moves]
   (with-out-str
-    (with-in-str (clojure.string/join "\n" moves) (run-game))))
+    (with-in-str (clojure.string/join "\n" moves) (run-game [get-human-move get-human-move]))))
 
 (describe "run game"
           (it "output prints empty board"

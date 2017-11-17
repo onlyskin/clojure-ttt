@@ -13,7 +13,7 @@
 
 (defn- markers [] ["O" "X"])
 
-(defn- current-marker [board]
+(defn current-marker [board]
   (as-> board b
     (available-moves b)
     (count b)

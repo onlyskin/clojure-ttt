@@ -12,9 +12,11 @@
   (cond
     (game-over? board) (output-game-result board)
     :else (do
-            (->> ((get move-functions 0) board)
-                 (play-on-board board)
-                 (play-turn move-functions (inc depth))))))
+            (let [get-move (get move-functions (mod depth 2))]
+              (->> board
+                   (get-move)
+                   (play-on-board board)
+                   (play-turn move-functions (inc depth)))))))
 
 (defn run-game [move-functions]
   (play-turn move-functions 0 (make-board)))

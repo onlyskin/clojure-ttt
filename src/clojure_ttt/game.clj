@@ -2,14 +2,23 @@
   (:require [clojure-ttt.ui :refer :all])
   (:require [clojure-ttt.board :refer :all]))
 
-(defn- play-turn [board]
+(defn- get-move-function [move-functions, depth]
+  (as-> [depth] n
+    (mod n 2)
+    (get n move-functions)))
+
+(defn- play-turn [move-functions depth board]
   (output-board board)
   (cond
     (game-over? board) (output-game-result board)
     :else (do
-            (->> (input-move board)
+            (->> ((get move-functions 0) board)
                  (play-on-board board)
-                 (play-turn)))))
+                 (play-turn move-functions (inc depth))))))
 
-(defn run-game []
-  (play-turn (make-board)))
+(defn run-game [move-functions]
+  (play-turn move-functions 0 (make-board)))
+
+(print (get-move-function
+         ["first" "second"]
+         0))

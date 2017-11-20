@@ -19,6 +19,3 @@
 (defn run-game [move-functions]
   (play-turn move-functions 0 (make-board)))
 
-(print (get-move-function
-         ["first" "second"]
-         0))

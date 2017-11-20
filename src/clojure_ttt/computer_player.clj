@@ -11,45 +11,34 @@
     (winner? board (current-marker board)) (winning-score)
     :else (losing-score)))
 
-(defn- available-nodes [board]
-  (->> board
-       (available-moves)
-       (map (partial hash-map :score nil :move))))
+(defn- max-by-score [scores]
+  (apply max-key val scores)) 
 
-(defn- greater-by-score [a b]
-  (cond
-    (> (:score a) (:score b)) a
-       :else b))
+(defn- best-move [scores] (key (max-by-score scores)))
+(defn- best-score [scores] (val (max-by-score scores)))
 
-(defn max-by-score [nodes]
-  (reduce #(greater-by-score %1 %2) nodes))
+(declare negamax)
+(defn score-moves [depth board]
+  (let [moves (available-moves board)
+        scores (->> moves
+                    (map
+                      #(negamax
+                         (inc depth)
+                         (play-on-board board %)))
+                    (map -))]
+    (zipmap moves scores)))
 
-(defn index-of-max [array]
-  (->> array
-       (map-indexed #(vector %))
-       (apply max-key second)
-       (first)))
-
-(defn minimax [depth board]
+(defn negamax [depth board]
   (cond
 
     (game-over? board)
     (score board)
 
     :else
-    (let [nodes (->> board
-                     (available-moves)
-                     (map (partial play-on-board board))
-                     (map (partial minimax (inc depth))))]
-      (cond (= 0 depth) (nth
-                          (available-moves board)
-                          (first
-                            (apply
-                              max-key
-                              second
-                              (map-indexed vector nodes))))
-            :else (max-by-score nodes)))
-    ))
+    (let [scores (score-moves depth board)]
+      (cond
+        (= 0 depth) (best-move scores)
+        :else (best-score scores)))))
 
-(defn get-minimax-move [board]
-  (minimax 0 board))
+(defn get-negamax-move [board]
+  (negamax 0 board))

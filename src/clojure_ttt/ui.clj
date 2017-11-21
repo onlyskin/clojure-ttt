@@ -77,3 +77,20 @@
 
        :else
        (recur board (inc depth))))))
+
+(defn valid-player-type? [input-string]
+  (or (= input-string "h") (= input-string "c")))
+
+(defn input-player
+  ([]
+   (input-player 0))
+
+  ([depth]
+   (cond
+     (= depth 0) (output "Choose player type: (h)uman or (c)omputer:")
+     :else (output "Please choose a valid player type:")) 
+
+   (let [s (input)]
+     (cond
+       (valid-player-type? s) s
+       :else (recur (inc depth))))))

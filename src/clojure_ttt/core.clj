@@ -5,4 +5,4 @@
   )
 
 (defn -main [& args]
-  (run-game [get-human-move get-negamax-move]))
+  (make-game))

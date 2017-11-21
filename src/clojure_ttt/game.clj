@@ -27,9 +27,6 @@
   ({"h" get-human-move "c" get-negamax-move} choice))
 
 (defn make-game []
-  (output "Player 1 type: (h)uman or (c)omputer")
-  (output "Player 2 type: (h)uman or (c)omputer")
-  (run-game [(move-func-from-choice (input))
-             (move-func-from-choice (input))
-             ]))
+  (run-game [(move-func-from-choice (input-player))
+             (move-func-from-choice (input-player))]))
 

@@ -59,18 +59,6 @@
 (describe "make game"
           (with-stubs)
 
-          (it "prints options"
-              (with-redefs
-                [run-game (stub :run-game)]
-               (should-contain
-                 #"(?s)Player 1 type: \(h\)uman or \(c\)omputer"
-                 (with-out-str
-                   (with-in-str "h\nh\n" (make-game))))
-               (should-contain
-                 #"(?s)Player 2 type: \(h\)uman or \(c\)omputer"
-                 (with-out-str
-                   (with-in-str "h\nh\n" (make-game))))))
-
           (it "calls run-game with human move funcs when input is human human"
               (with-redefs
                 [run-game (stub :run-game)]

@@ -64,5 +64,41 @@
               (should= 8 (with-in-str
                            "3\nst\n20\n8\n"
                            (input-move
-                             (vec-for-string "XXOOOX   "))))))
+                             (vec-for-string "XXOOOX   ")))))
+          
+          (it "prints a prompt for the move"
+              (should=
+                "Please choose a move\n"
+                (with-out-str
+                  (with-in-str "3\n"
+                    (input-move
+                      (vec-for-string "         "))))))
 
+          (it "prints a different prompt if the move was invalid"
+              (should=
+                "Please choose a move\nPlease choose a valid move\n"
+                (with-out-str
+                  (with-in-str "20\n3\n"
+                    (input-move
+                      (vec-for-string "         "))))))) 
+
+(describe "input-player"
+          (it "prints player input message"
+              (should-contain
+                #"(?s)Choose player type: \(h\)uman or \(c\)omputer"
+                (with-out-str
+                  (with-in-str "h\n" (input-player))))
+              )
+          (it "gets h when input is h"
+              (should= "h" (with-in-str
+                             "h\n"
+                             (input-player))))
+
+          (it "prints invalid input message when not h or c"
+              (should-contain
+                #"(?s)Please choose a valid player type:"
+                (with-out-str
+                  (with-in-str "r\nh\n" (input-player)))))
+          (it "keeps asking until h or c"
+              (should= "h" (with-in-str "r\nh\n" (input-player)))
+              ))

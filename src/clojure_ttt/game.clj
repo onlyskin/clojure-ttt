@@ -1,5 +1,7 @@
 (ns clojure-ttt.game
   (:require [clojure-ttt.ui :refer :all])
+  (:require [clojure-ttt.human-player :refer :all])
+  (:require [clojure-ttt.computer-player :refer :all])
   (:require [clojure-ttt.board :refer :all]))
 
 (defn- get-move-function [move-functions, depth]
@@ -20,4 +22,11 @@
 
 (defn run-game [move-functions]
   (play-turn move-functions 0 (make-board)))
+
+(defn- move-func-from-choice [choice]
+  ({"h" get-human-move "c" get-negamax-move} choice))
+
+(defn make-game []
+  (run-game [(move-func-from-choice (input-player))
+             (move-func-from-choice (input-player))]))
 

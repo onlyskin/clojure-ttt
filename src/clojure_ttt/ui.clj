@@ -55,17 +55,25 @@
        (some (partial = move))
        (boolean)))
 
-(defn input-move [board]
-  (let [s (input)]
-    (cond
+(defn input-move
+  ([board]
+   (input-move board 0))
 
-      (parseable-as-int? s)
-      (cond
-        (move-available? board (Integer/parseInt s))
-        (Integer/parseInt s)
+  ([board depth]
+   (cond
+     (= depth 0) (output "Please choose a move")
+     :else (output "Please choose a valid move"))
 
-        :else
-        (recur board))
+   (let [s (input)]
+     (cond
 
-      :else
-      (recur board))))
+       (parseable-as-int? s)
+       (cond
+         (move-available? board (Integer/parseInt s))
+         (Integer/parseInt s)
+
+         :else
+         (recur board (inc depth)))
+
+       :else
+       (recur board (inc depth))))))

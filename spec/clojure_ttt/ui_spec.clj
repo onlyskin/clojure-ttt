@@ -64,5 +64,20 @@
               (should= 8 (with-in-str
                            "3\nst\n20\n8\n"
                            (input-move
-                             (vec-for-string "XXOOOX   "))))))
+                             (vec-for-string "XXOOOX   ")))))
+          
+          (it "prints a prompt for the move"
+              (should=
+                "Please choose a move\n"
+                (with-out-str
+                  (with-in-str "3\n"
+                    (input-move
+                      (vec-for-string "         "))))))
 
+          (it "prints a different prompt if the move was invalid"
+              (should=
+                "Please choose a move\nPlease choose a valid move\n"
+                (with-out-str
+                  (with-in-str "20\n3\n"
+                    (input-move
+                      (vec-for-string "         "))))))) 

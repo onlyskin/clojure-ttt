@@ -6,7 +6,7 @@
   (clojure.string/split board-string #""))
 
 (describe "get-human-move"
-          (it "gets valid move from input"
-              (should= 3 (with-in-str "20\nst\n3\n"
-                (get-human-move (vec-for-string "         "))))))
+  (it "gets valid move from input"
+    (should= 3 (with-in-str "20\nst\n3\n"
+                 (get-human-move (vec-for-string "         "))))))
 

@@ -15,12 +15,12 @@
 (describe "output-board"
           (it "prints empty board"
               (should=
-                "1|2|3\n-----\n4|5|6\n-----\n7|8|9\n"
+                "1|2|3\n-----\n4|5|6\n-----\n7|8|9\n\n"
                 (with-out-str (output-board (make-board)))))
 
           (it "prints board with markers"
               (should=
-                "1|X|O\n-----\n4|5|6\n-----\n7|8|9\n"
+                "1|X|O\n-----\n4|5|6\n-----\n7|8|9\n\n"
                 (with-out-str
                   (output-board (vec-for-string " XO      "))))))
 
@@ -82,23 +82,52 @@
                     (input-move
                       (vec-for-string "         "))))))) 
 
-(describe "input-player"
-          (it "prints player input message"
-              (should-contain
-                #"(?s)Choose player type: \(h\)uman or \(c\)omputer"
+(describe "get-choice"
+          (it "outputs first prompt"
+              (should=
+                "prompt\n"
                 (with-out-str
-                  (with-in-str "h\n" (input-player))))
-              )
-          (it "gets h when input is h"
-              (should= "h" (with-in-str
-                             "h\n"
-                             (input-player))))
+                  (with-in-str "b\n"
+                    (get-choice "prompt" "erro" ["a" "b"])))))
 
-          (it "prints invalid input message when not h or c"
-              (should-contain
-                #"(?s)Please choose a valid player type:"
+          (it "gets choice from input"
+              (should=
+                "b"
+                (with-in-str "b\n"
+                  (get-choice "prompt" "error" ["a" "b"]))))
+          
+          (it "only accepts input which is in choices"
+              (should=
+                "a"
+                (with-in-str "x\na\n"
+                  (get-choice "prompt" "error" ["a" "b"]))))
+          
+          (it "prints error-prompt when first choice is invalid"
+              (should=
+                "prompt\nerror\n"
                 (with-out-str
-                  (with-in-str "r\nh\n" (input-player)))))
-          (it "keeps asking until h or c"
-              (should= "h" (with-in-str "r\nh\n" (input-player)))
-              ))
+                  (with-in-str "x\na\n"
+                    (get-choice "prompt" "error" ["a" "b"]))))))
+
+(describe "get-choice-from-map"
+          (with-stubs)
+
+          (it "calls get-choice with the prompts and keys"
+              (with-redefs
+                [get-choice (stub :get-choice {:return "2"})]
+
+                (get-choice-from-map :prompt :error {"1" "x" "2" "y"})
+
+                (should-have-invoked
+                  :get-choice
+                  {:with [:prompt :error ["1" "2"]]})))
+
+          (it "returns value corresponding to input key"
+              (with-redefs
+                [get-choice (stub :get-choice {:return "2"})]
+
+                (get-choice-from-map :prompt :error {"1" "x" "2" "y"})
+
+                (should=
+                  "y"
+                  (get-choice-from-map :prompt :error {"1" "x" "2" "y"})))))

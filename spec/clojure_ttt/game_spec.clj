@@ -55,3 +55,4 @@
               (should-contain
                 "X won"
                 (out-str-from-h-other-game ["1" "2" "3"]))))
+

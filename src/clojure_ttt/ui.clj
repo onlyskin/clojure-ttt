@@ -22,7 +22,8 @@
     (cell-strings board)))
 
 (defn output-board [board]
-  (output (board-str board)))
+  (output (board-str board))
+  (output ""))
 
 (defn output-game-result [board]
   (cond
@@ -78,19 +79,20 @@
        :else
        (recur board (inc depth))))))
 
-(defn valid-player-type? [input-string]
-  (or (= input-string "h") (= input-string "c")))
+(defn- get-valid-choice [error-prompt choices]
+  (let [s (input)]
+    (cond
+      (some #(= s %) choices) s
+      :else (do
+              (output error-prompt)
+              (recur error-prompt choices)))))
 
-(defn input-player
-  ([]
-   (input-player 0))
+(defn get-choice [prompt error-prompt choices]
+  (output prompt)
+  (get-valid-choice error-prompt choices))
 
-  ([depth]
-   (cond
-     (= depth 0) (output "Choose player type: (h)uman or (c)omputer:")
-     :else (output "Please choose a valid player type:")) 
-
-   (let [s (input)]
-     (cond
-       (valid-player-type? s) s
-       :else (recur (inc depth))))))
+(defn get-choice-from-map [prompt error-prompt choice-map]
+  (->> choice-map
+       (keys)
+       (get-choice prompt error-prompt)
+       (choice-map)))

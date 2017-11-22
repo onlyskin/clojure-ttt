@@ -9,29 +9,55 @@
 (describe "menu"
           (with-stubs)
 
-          (it "calls get-choice with [[0 1]]"
+          (it "prints welcome message"
               (with-redefs
-                [get-choice (stub :get-choice {:return "2"})]
+                [get-choice-from-map (stub :get-choice-from-map)
+                 (should=
+                   #"Welcome"
+                   (with-out-str
+                     (main-menu)))]))
+
+          (it "calls get-choice-from-map with [{1 make-game 2 exit}]"
+              (with-redefs
+                [get-choice-from-map
+                 (stub :get-choice-from-map
+                       {:return (stub :returned-func)})]
                 (main-menu)
 
-                (should-have-invoked :get-choice {:with [["1" "2"]]})))
+                (should-have-invoked
+                  :get-choice-from-map
+                  {:with
+                   ["1) Play a game\n2) Exit"
+                    "Please choose a valid option:"
+                    {"1" make-game "2" exit}]})
 
-          (it "calls exit when choice is 2"
-              (with-redefs
-                [exit (stub :exit)
-                 get-choice (stub :get-choice {:return "2"})]
-                (main-menu)
+                (should-have-invoked :returned-func))))
 
-                (should-have-invoked :exit)))
+(describe "get-player-choice"
+          (it "prints player input message"
+              (should-contain
+                #"(?s)Choose player type: \(h\)uman or \(c\)omputer"
+                (with-out-str
+                  (with-in-str "h\n" (get-move-func)))))
 
-         (it "calls make-game when choice is 1"
-             (with-redefs
-               [make-game (stub :make-game)
-                get-choice (stub :get-choice {:return "1"}) ]
-               (main-menu)
+          (it "gets get-human-move when input is h"
+              (should= get-human-move (with-in-str
+                             "h\n"
+                             (get-move-func))))
 
-               (should-have-invoked :make-game))))
+          (it "returns get-negamax-move when input is c"
+              (should= get-negamax-move (with-in-str
+                             "c\n"
+                             (get-move-func))))
 
+          (it "prints invalid input message when not h or c"
+              (should-contain
+                #"(?s)Please choose a valid player type:"
+                (with-out-str
+                  (with-in-str "r\nh\n" (get-move-func)))))
+
+          (it "keeps asking until h or c"
+              (should= get-human-move (with-in-str "r\nh\n" (get-move-func)))))
 
 (describe "make game"
           (with-stubs)

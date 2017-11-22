@@ -6,16 +6,19 @@
 
 (defn exit [])
 
-(defn- move-func-from-choice [choice]
-  ({"h" get-human-move "c" get-negamax-move} choice))
+(defn get-move-func []
+  (get-choice-from-map
+    "Choose player type: (h)uman or (c)omputer"
+    "Please choose a valid player type:"
+    {"h" get-human-move "c" get-negamax-move}))
 
 (defn make-game []
-  (run-game [(move-func-from-choice (input-player))
-             (move-func-from-choice (input-player))]))
-
-(defn- menu-map [choice]
-  ({"1" make-game "2" exit} choice))
+  (run-game [(get-move-func) (get-move-func)]))
 
 (defn main-menu []
-  (apply (menu-map (get-choice ["1" "2"])) []))
-
+  (output "Welcome to Tic Tac Toe")
+  (apply (get-choice-from-map
+           "1) Play a game\n2) Exit"
+           "Please choose a valid option:"
+           {"1" make-game "2" exit})
+         []))

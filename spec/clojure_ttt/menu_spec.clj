@@ -6,7 +6,15 @@
             [clojure-ttt.ui :refer :all]   
             [clojure-ttt.menu :refer :all])) 
 
-(describe "menu"
+(describe "integration"
+  (it "plays a whole game and quits"
+    (should-contain
+      #"(?s)Welcome.*Exit.*Welcome"
+      (with-out-str
+        (with-in-str "1\nh\nc\n1\n7\n2\n2\n"
+          (main-menu))))))
+
+(describe "main-menu"
   (with-stubs)
 
   (it "prints welcome message"
@@ -64,7 +72,8 @@
 
   (it "calls run-game with human move funcs when input is human human"
     (with-redefs
-      [run-game (stub :run-game)]
+      [run-game (stub :run-game)
+       main-menu (stub :main-menu)]
       (with-out-str
         (with-in-str "h\nh\n" (make-game)))
 
@@ -72,9 +81,19 @@
         :run-game
         {:with [[get-human-move get-human-move]]})))
 
+  (it "calls main-menu again"
+    (with-redefs
+      [run-game (stub :run-game)
+       main-menu (stub :main-menu)]
+      (with-out-str
+        (with-in-str "h\nh\n" (make-game)))
+
+      (should-have-invoked :main-menu)))
+
   (it "calls run-game with human move and negamax move when input is human computer"
     (with-redefs
-      [run-game (stub :run-game)]
+      [run-game (stub :run-game)
+       main-menu (stub :main-menu)]
       (with-out-str
         (with-in-str "h\nc\n" (make-game)))
 
@@ -84,7 +103,8 @@
 
   (it "calls run-game with negamax move and human move when input is computer human"
     (with-redefs
-      [run-game (stub :run-game)]
+      [run-game (stub :run-game)
+       main-menu (stub :main-menu)]
       (with-out-str
         (with-in-str "c\nh\n" (make-game)))
 

@@ -12,8 +12,10 @@
     "Please choose a valid player type:"
     {"h" get-human-move "c" get-negamax-move}))
 
+(declare main-menu)
 (defn make-game []
-  (run-game [(get-move-func) (get-move-func)]))
+  (run-game [(get-move-func) (get-move-func)])
+  (main-menu))
 
 (defn main-menu []
   (output "Welcome to Tic Tac Toe")

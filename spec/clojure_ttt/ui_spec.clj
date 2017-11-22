@@ -52,36 +52,6 @@
                 (with-out-str (with-in-str "test input\n"
                                 (input "prompt-string"))))))
 
-(describe "input-integer"
-          (it "gets integer"
-              (should= 3 (with-in-str "3\n" (input-integer))))
-
-          (it "rejects string"
-              (should= 3 (with-in-str "st\n3\n" (input-integer)))))
-
-(describe "input-move"
-          (it "rejects unavailable moves and strings"
-              (should= 8 (with-in-str
-                           "3\nst\n20\n8\n"
-                           (input-move
-                             (vec-for-string "XXOOOX   ")))))
-          
-          (it "prints a prompt for the move"
-              (should=
-                "Please choose a move\n"
-                (with-out-str
-                  (with-in-str "3\n"
-                    (input-move
-                      (vec-for-string "         "))))))
-
-          (it "prints a different prompt if the move was invalid"
-              (should=
-                "Please choose a move\nPlease choose a valid move\n"
-                (with-out-str
-                  (with-in-str "20\n3\n"
-                    (input-move
-                      (vec-for-string "         "))))))) 
-
 (describe "get-choice"
           (it "outputs first prompt"
               (should=
@@ -131,3 +101,27 @@
                 (should=
                   "y"
                   (get-choice-from-map :prompt :error {"1" "x" "2" "y"})))))
+
+(describe "get-move"
+          (with-stubs)
+
+          (it "calls get-choice with string list of available moves"
+              (with-redefs
+                [get-choice (stub :get-choice {:return "8"})]
+
+                (get-move (vec-for-string "X  OOXX  "))
+
+                (should-have-invoked
+                  :get-choice
+                  {:with
+                   ["Choose a move:"
+                    "Please choose a valid move:"
+                    ["2" "3" "8" "9"]]})))
+
+          (it "returns the result of get-choice as an int"
+              (with-redefs
+                [get-choice (stub :get-choice {:return "8"})]
+
+                (should=
+                  8
+                  (get-move (vec-for-string "X  OOXX  "))))))

@@ -38,47 +38,6 @@
   ([]
    (read-line)))
 
-(defn- parseable-as-int? [string]
-  (try
-    (Integer/parseInt string)
-    true
-    (catch Exception e false)))
-
-(defn input-integer []
-  (let [s (input)]
-    (cond
-      (parseable-as-int? s) (Integer/parseInt s)
-      :else (recur))))
-
-(defn- move-available? [board, move]
-  (->> board
-       (available-moves)
-       (some (partial = move))
-       (boolean)))
-
-(defn input-move
-  ([board]
-   (input-move board 0))
-
-  ([board depth]
-   (cond
-     (= depth 0) (output "Please choose a move")
-     :else (output "Please choose a valid move"))
-
-   (let [s (input)]
-     (cond
-
-       (parseable-as-int? s)
-       (cond
-         (move-available? board (Integer/parseInt s))
-         (Integer/parseInt s)
-
-         :else
-         (recur board (inc depth)))
-
-       :else
-       (recur board (inc depth))))))
-
 (defn- get-valid-choice [error-prompt choices]
   (let [s (input)]
     (cond
@@ -96,3 +55,13 @@
        (keys)
        (get-choice prompt error-prompt)
        (choice-map)))
+
+(defn get-move [board]
+  (->> board
+       (available-moves)
+       (map #(str %))
+       (vec)
+       (get-choice
+         "Choose a move:"
+         "Please choose a valid move:")
+       (Integer/parseInt)))

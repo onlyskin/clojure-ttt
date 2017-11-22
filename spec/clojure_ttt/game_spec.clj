@@ -55,35 +55,3 @@
               (should-contain
                 "X won"
                 (out-str-from-h-other-game ["1" "2" "3"]))))
-
-(describe "make game"
-          (with-stubs)
-
-          (it "calls run-game with human move funcs when input is human human"
-              (with-redefs
-                [run-game (stub :run-game)]
-                (with-in-str "h\nh\n" (make-game))
-
-                (should-have-invoked
-                  :run-game
-                  {:with [[get-human-move get-human-move]]})))
-
-          (it "calls run-game with human move and negamax move when input is human computer"
-              (with-redefs
-                [run-game (stub :run-game)]
-                (with-in-str "h\nc\n" (make-game))
-
-                (should-have-invoked
-                  :run-game
-                  {:with [[get-human-move get-negamax-move]]})))
-
-          (it "calls run-game with negamax move and human move when input is computer human"
-              (with-redefs
-                [run-game (stub :run-game)]
-                (with-in-str "c\nh\n" (make-game))
-
-                (should-have-invoked
-                  :run-game
-                  {:with [[get-negamax-move get-human-move]]})))
-
-          )

@@ -22,7 +22,8 @@
     (cell-strings board)))
 
 (defn output-board [board]
-  (output (board-str board)))
+  (output (board-str board))
+  (output ""))
 
 (defn output-game-result [board]
   (cond
@@ -37,60 +38,30 @@
   ([]
    (read-line)))
 
-(defn- parseable-as-int? [string]
-  (try
-    (Integer/parseInt string)
-    true
-    (catch Exception e false)))
-
-(defn input-integer []
+(defn- get-valid-choice [error-prompt choices]
   (let [s (input)]
     (cond
-      (parseable-as-int? s) (Integer/parseInt s)
-      :else (recur))))
+      (some #(= s %) choices) s
+      :else (do
+              (output error-prompt)
+              (recur error-prompt choices)))))
 
-(defn- move-available? [board, move]
+(defn get-choice [prompt error-prompt choices]
+  (output prompt)
+  (get-valid-choice error-prompt choices))
+
+(defn get-choice-from-map [prompt error-prompt choice-map]
+  (->> choice-map
+       (keys)
+       (get-choice prompt error-prompt)
+       (choice-map)))
+
+(defn get-move [board]
   (->> board
        (available-moves)
-       (some (partial = move))
-       (boolean)))
-
-(defn input-move
-  ([board]
-   (input-move board 0))
-
-  ([board depth]
-   (cond
-     (= depth 0) (output "Please choose a move")
-     :else (output "Please choose a valid move"))
-
-   (let [s (input)]
-     (cond
-
-       (parseable-as-int? s)
-       (cond
-         (move-available? board (Integer/parseInt s))
-         (Integer/parseInt s)
-
-         :else
-         (recur board (inc depth)))
-
-       :else
-       (recur board (inc depth))))))
-
-(defn valid-player-type? [input-string]
-  (or (= input-string "h") (= input-string "c")))
-
-(defn input-player
-  ([]
-   (input-player 0))
-
-  ([depth]
-   (cond
-     (= depth 0) (output "Choose player type: (h)uman or (c)omputer:")
-     :else (output "Please choose a valid player type:")) 
-
-   (let [s (input)]
-     (cond
-       (valid-player-type? s) s
-       :else (recur (inc depth))))))
+       (map #(str %))
+       (vec)
+       (get-choice
+         "Choose a move:"
+         "Please choose a valid move:")
+       (Integer/parseInt)))

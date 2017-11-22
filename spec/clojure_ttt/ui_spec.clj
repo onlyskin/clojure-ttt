@@ -15,12 +15,12 @@
 (describe "output-board"
           (it "prints empty board"
               (should=
-                "1|2|3\n-----\n4|5|6\n-----\n7|8|9\n"
+                "1|2|3\n-----\n4|5|6\n-----\n7|8|9\n\n"
                 (with-out-str (output-board (make-board)))))
 
           (it "prints board with markers"
               (should=
-                "1|X|O\n-----\n4|5|6\n-----\n7|8|9\n"
+                "1|X|O\n-----\n4|5|6\n-----\n7|8|9\n\n"
                 (with-out-str
                   (output-board (vec-for-string " XO      "))))))
 
@@ -52,53 +52,76 @@
                 (with-out-str (with-in-str "test input\n"
                                 (input "prompt-string"))))))
 
-(describe "input-integer"
-          (it "gets integer"
-              (should= 3 (with-in-str "3\n" (input-integer))))
+(describe "get-choice"
+          (it "outputs first prompt"
+              (should=
+                "prompt\n"
+                (with-out-str
+                  (with-in-str "b\n"
+                    (get-choice "prompt" "erro" ["a" "b"])))))
 
-          (it "rejects string"
-              (should= 3 (with-in-str "st\n3\n" (input-integer)))))
-
-(describe "input-move"
-          (it "rejects unavailable moves and strings"
-              (should= 8 (with-in-str
-                           "3\nst\n20\n8\n"
-                           (input-move
-                             (vec-for-string "XXOOOX   ")))))
+          (it "gets choice from input"
+              (should=
+                "b"
+                (with-in-str "b\n"
+                  (get-choice "prompt" "error" ["a" "b"]))))
           
-          (it "prints a prompt for the move"
+          (it "only accepts input which is in choices"
               (should=
-                "Please choose a move\n"
-                (with-out-str
-                  (with-in-str "3\n"
-                    (input-move
-                      (vec-for-string "         "))))))
-
-          (it "prints a different prompt if the move was invalid"
+                "a"
+                (with-in-str "x\na\n"
+                  (get-choice "prompt" "error" ["a" "b"]))))
+          
+          (it "prints error-prompt when first choice is invalid"
               (should=
-                "Please choose a move\nPlease choose a valid move\n"
+                "prompt\nerror\n"
                 (with-out-str
-                  (with-in-str "20\n3\n"
-                    (input-move
-                      (vec-for-string "         "))))))) 
+                  (with-in-str "x\na\n"
+                    (get-choice "prompt" "error" ["a" "b"]))))))
 
-(describe "input-player"
-          (it "prints player input message"
-              (should-contain
-                #"(?s)Choose player type: \(h\)uman or \(c\)omputer"
-                (with-out-str
-                  (with-in-str "h\n" (input-player))))
-              )
-          (it "gets h when input is h"
-              (should= "h" (with-in-str
-                             "h\n"
-                             (input-player))))
+(describe "get-choice-from-map"
+          (with-stubs)
 
-          (it "prints invalid input message when not h or c"
-              (should-contain
-                #"(?s)Please choose a valid player type:"
-                (with-out-str
-                  (with-in-str "r\nh\n" (input-player)))))
-          (it "keeps asking until h or c"
-              (should= "h" (with-in-str "r\nh\n" (input-player)))
-              ))
+          (it "calls get-choice with the prompts and keys"
+              (with-redefs
+                [get-choice (stub :get-choice {:return "2"})]
+
+                (get-choice-from-map :prompt :error {"1" "x" "2" "y"})
+
+                (should-have-invoked
+                  :get-choice
+                  {:with [:prompt :error ["1" "2"]]})))
+
+          (it "returns value corresponding to input key"
+              (with-redefs
+                [get-choice (stub :get-choice {:return "2"})]
+
+                (get-choice-from-map :prompt :error {"1" "x" "2" "y"})
+
+                (should=
+                  "y"
+                  (get-choice-from-map :prompt :error {"1" "x" "2" "y"})))))
+
+(describe "get-move"
+          (with-stubs)
+
+          (it "calls get-choice with string list of available moves"
+              (with-redefs
+                [get-choice (stub :get-choice {:return "8"})]
+
+                (get-move (vec-for-string "X  OOXX  "))
+
+                (should-have-invoked
+                  :get-choice
+                  {:with
+                   ["Choose a move:"
+                    "Please choose a valid move:"
+                    ["2" "3" "8" "9"]]})))
+
+          (it "returns the result of get-choice as an int"
+              (with-redefs
+                [get-choice (stub :get-choice {:return "8"})]
+
+                (should=
+                  8
+                  (get-move (vec-for-string "X  OOXX  "))))))
